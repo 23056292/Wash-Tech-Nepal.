@@ -18,12 +18,12 @@ const Navbar = () => {
     <nav className="h-16 bg-gradient-to-r from-white via-blue-50 to-white flex items-center justify-between px-6 md:px-12 shadow-lg fixed top-0 left-0 w-full z-50 backdrop-blur">
       
       {/* Logo / App Name */}
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-4">
         <Link to="/" className="flex items-center space-x-3 group">
           <img
             src={heroImage}
             alt="Wash Tech Logo"
-            className="h-10 w-10 rounded-full border border-blue-200 group-hover:scale-105 transition"
+            className="h-12 w-12 rounded-full border border-blue-200 group-hover:scale-105 transition"
           />
           <h1 className="text-xl md:text-2xl font-bold text-blue-600 tracking-wide group-hover:text-blue-700 transition">
             Wash Tech Nepal
