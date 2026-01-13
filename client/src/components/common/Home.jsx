@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../ui/Navbar";
 import Footer from "../ui/Footer";
-import solutionimage from "../../assets/Images/solution.svg";
+import solutionimage from "../../assets/Images/solution.png";
 
 const Home = () => {
   return (
@@ -28,7 +28,7 @@ const Home = () => {
 
         {/* Image Section */}
         <div className="flex-1 relative flex justify-center md:justify-end">
-          <div className="relative w-[90%] md:w-[500px] lg:w-[550px]">
+          <div className="relative w-full md:w-[500px] lg:w-[700px]">
             <img
               src={solutionimage}
               alt="Wash Tech Nepal"
@@ -82,13 +82,13 @@ const Home = () => {
         </p>
       </section>
 
-      {/* Tech Stack Section */}
+      {/* Key Features Section */}
       <section className="px-6 md:px-20 py-16 text-center bg-blue-50 rounded-t-3xl">
-        <h2 className="text-3xl font-bold text-blue-800 mb-6">Tech Stack</h2>
+        <h2 className="text-3xl font-bold text-blue-800 mb-6">Key Features</h2>
         <div className="flex flex-wrap justify-center gap-6 text-gray-700 font-medium">
-          {["🖥️ React.js", "🎨 Tailwind CSS", "⚙️ Node.js", "🧩 Express.js", "🗄️ MongoDB", "🔐 JWT Authentication", "☁️ Vercel / Render"].map((tech, idx) => (
+          {["👥 Multi-Role Access", "⏱️ Time Tracking", "📋 Leave Management", "📊 Real-time Reports", "🔐 Secure Authentication", "📱 Responsive Design", "🔄 Real-time Data Sync"].map((feature, idx) => (
             <span key={idx} className="bg-white/60 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm hover:shadow-md transition">
-              {tech}
+              {feature}
             </span>
           ))}
         </div>

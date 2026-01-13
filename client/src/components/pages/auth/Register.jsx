@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../../../context/UserContext";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,12 +12,13 @@ const Register = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { register } = useUser();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
@@ -26,19 +28,23 @@ const Register = () => {
 
     setLoading(true);
 
-    // Dummy registration logic
-    setTimeout(() => {
-      alert(`Registration successful for ${formData.name}! Please login.`);
-      setLoading(false);
+    const result = await register(formData.name, formData.email, formData.password, formData.role);
+    
+    if (result.success) {
+      alert(`Registration successful for ${formData.name}! Please login to continue.`);
       navigate("/login");
-    }, 1000);
+    } else {
+      alert(result.msg || 'Registration failed');
+    }
+    
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-green-100 p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 p-6">
       <div className="bg-white shadow-2xl rounded-3xl p-8 w-full max-w-md border border-gray-200">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-green-600 mb-2">Create Account</h1>
+          <h1 className="text-3xl font-bold text-blue-600 mb-2">Create Account</h1>
           <p className="text-gray-500">Register for Wash Tech Nepal</p>
         </div>
 
@@ -53,7 +59,7 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Enter your full name"
               required
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
@@ -67,7 +73,7 @@ const Register = () => {
               onChange={handleChange}
               placeholder="Enter your email"
               required
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
@@ -78,10 +84,11 @@ const Register = () => {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             >
               <option value="STAFF">Staff</option>
               <option value="COMPANY">Company</option>
+              <option value="ADMIN">Admin</option>
             </select>
           </div>
 
@@ -96,7 +103,7 @@ const Register = () => {
               placeholder="Create a password"
               required
               minLength={6}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
@@ -111,7 +118,7 @@ const Register = () => {
               placeholder="Re-enter your password"
               required
               minLength={6}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
           </div>
 
@@ -121,8 +128,8 @@ const Register = () => {
             disabled={loading}
             className={`w-full py-3 rounded-xl text-white font-semibold transition ${
               loading
-                ? "bg-green-400 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700"
+                ? "bg-blue-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
             {loading ? "Creating Account..." : "Register"}
@@ -135,7 +142,7 @@ const Register = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-green-600 font-semibold hover:text-green-800 transition"
+              className="text-blue-600 font-semibold hover:text-blue-800 transition"
             >
               Login here
             </Link>

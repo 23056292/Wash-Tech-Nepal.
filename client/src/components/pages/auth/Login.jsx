@@ -9,34 +9,38 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { switchRole } = useUser();
+  const { login } = useUser();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Dummy login logic based on email
-    setTimeout(() => {
-      if (formData.email.includes("admin")) {
-        switchRole("ADMIN");
-        navigate("/admin");
-      } else if (formData.email.includes("company")) {
-        switchRole("COMPANY");
-        navigate("/company");
-      } else if (formData.email.includes("staff")) {
-        switchRole("STAFF");
-        navigate("/staff");
-      } else {
-        // Default to admin
-        switchRole("ADMIN");
-        navigate("/admin");
+    const result = await login(formData.email, formData.password);
+    
+    if (result.success) {
+      // Redirect based on user role
+      switch(result.user.role) {
+        case 'ADMIN':
+          navigate("/admin");
+          break;
+        case 'COMPANY':
+          navigate("/company");
+          break;
+        case 'STAFF':
+          navigate("/staff");
+          break;
+        default:
+          navigate("/admin");
       }
-      setLoading(false);
-    }, 1000);
+    } else {
+      alert(result.msg || 'Login failed');
+    }
+    
+    setLoading(false);
   };
 
   return (
@@ -60,9 +64,6 @@ const Login = () => {
               required
               className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
-            <p className="text-xs text-gray-500 mt-1">
-              Hint: Use email with "admin", "company", or "staff" to test roles
-            </p>
           </div>
 
           {/* Password */}

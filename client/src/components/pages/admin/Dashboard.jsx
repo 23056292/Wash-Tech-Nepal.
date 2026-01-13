@@ -1,31 +1,66 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layout/AdminLayout";
+import { useUser } from "../../../context/UserContext";
 
 const AdminDashboard = () => {
-  // ✅ Dummy data for frontend-only
-  const DUMMY_STATS = {
-    totalCompanies: 12,
-    totalStaff: 85,
-    activeStaffToday: 72, // New metric
-    totalCheckIns: 230,
-  };
+  const { currentUser } = useUser();
+  
+  // State for stats
+  const [stats, setStats] = useState({
+    totalCompanies: 0,
+    totalStaff: 0,
+    activeStaffToday: 0,
+    totalCheckIns: 0,
+  });
+  const [loading, setLoading] = useState(true);
 
-  const [stats, setStats] = useState(DUMMY_STATS);
-  const [loading, setLoading] = useState(false);
-
-  // Simulate data fetch
+  // Fetch stats from API
   useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setStats(DUMMY_STATS);
-      setLoading(false);
-    }, 500); // simulate network delay
-    return () => clearTimeout(timer);
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        
+        const response = await fetch('http://localhost:5001/api/stats', {
+          headers: {
+            'x-auth-token': token
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setStats(data);
+        } else {
+          console.error('Failed to fetch stats');
+          // Set default values if API fails
+          setStats({
+            totalCompanies: 0,
+            totalStaff: 0,
+            activeStaffToday: 0,
+            totalCheckIns: 0,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        // Set default values if error occurs
+        setStats({
+          totalCompanies: 0,
+          totalStaff: 0,
+          activeStaffToday: 0,
+          totalCheckIns: 0,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchStats();
   }, []);
 
   return (
     <AdminLayout>
-      <h1 className="text-3xl font-bold text-blue-600 mb-6">Admin Dashboard</h1>
+      <div>
+        <h1 className="text-3xl font-bold text-blue-600 mb-6">Admin Dashboard</h1>
+      </div>
 
       {loading ? (
         <p className="text-center text-gray-500 mt-10 animate-pulse">Loading dashboard...</p>
